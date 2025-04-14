@@ -1,14 +1,21 @@
 'use client';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState, Fragment } from 'react';
 import Image from 'next/image';
 import { BACKERS } from '@/components/Landing/Data';
 const Backers = () => {
+  const [backers, setBackers] = useState(BACKERS);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleRight = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: 160, behavior: 'smooth' });
     }
+  };
+  const handleRighttryotra = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 160, behavior: 'smooth' });
+    }
+    console.log('first');
   };
 
   const handleLeft = () => {
@@ -37,8 +44,10 @@ const Backers = () => {
 
   return (
     <div className="relative mt-8 flex flex-col max-lg:items-center max-lg:mx-auto gap-3 2xl:max-w-[600px] max-w-[500px]">
-      <div className="w-[200%] absolute top-0 right-0 h-[1px] bg-gradient-to-r from-pastel-green-400/30 to-white/20 bg-blend-overlay z-[-10] max-lg:hidden"></div>
-      <div className="w-[1px] absolute top-0 right-0 h-[600px] bg-gradient-to-t from-pastel-green-400/30 to-white/20 bg-blend-overlay z-[-10] max-lg:hidden"></div>
+      <div className="w-[200%] absolute top-0 right-0 h-[1px] bg-white/50 bg-blend-overlay z-[-9] max-lg:hidden overflow-hidden">
+        <div className="w-[70%] h-40 rounded-full blur-sm [background:radial-gradient(circle,_rgba(92,_222,_102,_1)_20%,_rgba(92,_222,_102,_0.43)_70%)] absolute top-1/2 -translate-y-1/2  max-lg:hidden left-1/2 -translate-x-1/2 animate-horizontal-light z-[100] bg-blend-overlay"></div>
+      </div>
+      <div className="w-[1px] absolute top-0 right-0 h-[600px] bg-white/50 bg-blend-overlay z-[-9] max-lg:hidden"></div>
       <div className="absolute -top-2.5 -left-[58px] bg-[#D9D9D9] w-5 h-5 max-lg:hidden"></div>
       <div className="absolute -bottom-14 -right-2.5 bg-[#D9D9D9] w-5 h-5 max-lg:hidden"></div>
       <div className="flex items-center justify-between w-full">
@@ -64,15 +73,33 @@ const Backers = () => {
         className="flex overflow-scroll gap-6 items-center w-full 2xl:max-w-xl max-w-md hide-scroll scroll-smooth mx-auto"
         ref={scrollRef}
       >
-        {BACKERS.map((item, index) => (
-          <Image
-            src={item.image}
-            alt={item.name}
+        {backers.map((item, index) => (
+          <div
             key={index}
-            width={120}
-            height={32}
-            className="h-[32px] w-auto"
-          />
+            className="min-w-[80px] w-auto flex-shrink-0 min-h-[32px] relative"
+          >
+            <Image
+              src={item.image}
+              alt={item.name}
+              width={120}
+              height={32}
+              className={`h-[32px] w-auto ${
+                item.loaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              quality={100}
+              onLoad={() => {
+                backers[index].loaded = true;
+                setBackers([...backers]);
+              }}
+            />
+            <div
+              className={`flex items-center justify-center border border-pastel-green-400 w-[120px] h-[32px] text-white text-sm max-lg:text-xs bg-woodsmoke-950 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 transition-all ${
+                item.loaded ? 'opacity-0' : 'opacity-100 animate-pulse'
+              }`}
+            >
+              {item.name}
+            </div>
+          </div>
         ))}
       </div>
     </div>
